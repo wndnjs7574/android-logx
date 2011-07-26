@@ -11,7 +11,7 @@ are in the root of your local copy of the AOSP, _patch -p2 < path_to_patch_file_
 == Build ==
 You will need to build the entire AOSP. You can find instructions for that here: http://source.android.com/source/building.html. 
 
-If you have already built the project, you can just rebuild the relevant changes and include them in the system image. This can be done with the following commands from the root of your local copy of the AOSP (make sure you have executed build/envsetup.sh):
+If you have already built the AOSP, you can just rebuild the relevant changes and include them in the system image. This can be done with the following commands from the root of your local copy of the AOSP (make sure you have executed build/envsetup.sh):
 
   * {{{mmm frameworks/base snod}}}
   * {{{mmm libcore/ snod}}}
