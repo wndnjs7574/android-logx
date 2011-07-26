@@ -1,0 +1,55 @@
+--- /home/ruben/aosp_original/libcore/luni/src/main/java/java/net/Socket.java	2011-07-23 12:52:22.571365002 -0500
++++ /home/ruben/aosp/libcore/luni/src/main/java/java/net/Socket.java	2011-07-08 20:47:18.505957002 -0500
+@@ -24,6 +24,9 @@
+ import org.apache.harmony.luni.net.PlainSocketImpl;
+ import org.apache.harmony.luni.platform.Platform;
+ 
++import java.beans.LogXEventSupport;
++import java.beans.SocketEvent;
++
+ /**
+  * Provides a client-side TCP socket.
+  */
+@@ -58,6 +61,7 @@
+     public Socket() {
+         this.impl = factory != null ? factory.createSocketImpl() : new PlainSocketImpl();
+         this.proxy = null;
++		//LogXEventSupport.getInstance().dispatchEvent(new SocketEvent("Socket()", this));	
+     }
+ 
+     /**
+@@ -173,7 +177,7 @@
+      *             connect to the given address and port.
+      */
+     public Socket(String dstName, int dstPort) throws UnknownHostException, IOException {
+-        this(dstName, dstPort, null, 0);
++        this(dstName, dstPort, null, 0);		
+     }
+ 
+     /**
+@@ -260,7 +264,7 @@
+     public Socket(InetAddress dstAddress, int dstPort) throws IOException {
+         this();
+         checkDestination(dstAddress, dstPort);
+-        startupSocket(dstAddress, dstPort, null, 0, true);
++        startupSocket(dstAddress, dstPort, null, 0, true);	
+     }
+ 
+     /**
+@@ -704,6 +708,8 @@
+                 isBound = true;
+                 impl.connect(dstAddress, dstPort);
+                 isConnected = true;
++				//dispatch LogX event
++				LogXEventSupport.getInstance().dispatchEvent(new SocketEvent("Socket.startupSocket", this));	
+                 cacheLocalAddress();
+             } catch (IOException e) {
+                 impl.close();
+@@ -982,6 +988,7 @@
+                 }
+                 impl.connect(remoteAddr, timeout);
+                 isConnected = true;
++				LogXEventSupport.getInstance().dispatchEvent(new SocketEvent("Socket.connect()", this));
+                 cacheLocalAddress();
+             } catch (IOException e) {
+                 impl.close();

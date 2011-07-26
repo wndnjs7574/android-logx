@@ -1,0 +1,241 @@
+diff -rupN /home/ruben/aosp_original/libcore/luni/src/main/java/java/beans//FileEvent.java /home/ruben/aosp/libcore/luni/src/main/java/java/beans//FileEvent.java
+--- /home/ruben/aosp_original/libcore/luni/src/main/java/java/beans//FileEvent.java	1969-12-31 18:00:00.000000000 -0600
++++ /home/ruben/aosp/libcore/luni/src/main/java/java/beans//FileEvent.java	2011-07-23 18:59:27.011365001 -0500
+@@ -0,0 +1,31 @@
++/*  Copyright 2011 LogX Project.
++*
++*   Licensed under the Apache License, Version 2.0 (the "License");
++*   you may not use this file except in compliance with the License.
++*   You may obtain a copy of the License at
++*
++*       http://www.apache.org/licenses/LICENSE-2.0
++*
++*   Unless required by applicable law or agreed to in writing, software
++*   distributed under the License is distributed on an "AS IS" BASIS,
++*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++*   See the License for the specific language governing permissions and
++*   limitations under the License.
++*/
++
++package java.beans;
++
++import java.io.File;
++
++/**
++* An event class for activity that occurs on
++* java.io.File.
++*/
++
++public class FileEvent extends LogXEvent
++{	
++	public FileEvent(String eventTag, File source)
++	{
++		super(eventTag, source);
++	}
++}
+diff -rupN /home/ruben/aosp_original/libcore/luni/src/main/java/java/beans//LogXEvent.java /home/ruben/aosp/libcore/luni/src/main/java/java/beans//LogXEvent.java
+--- /home/ruben/aosp_original/libcore/luni/src/main/java/java/beans//LogXEvent.java	1969-12-31 18:00:00.000000000 -0600
++++ /home/ruben/aosp/libcore/luni/src/main/java/java/beans//LogXEvent.java	2011-07-23 18:59:24.121365002 -0500
+@@ -0,0 +1,43 @@
++/*  Copyright 2011 LogX Project.
++*
++*   Licensed under the Apache License, Version 2.0 (the "License");
++*   you may not use this file except in compliance with the License.
++*   You may obtain a copy of the License at
++*
++*       http://www.apache.org/licenses/LICENSE-2.0
++*
++*   Unless required by applicable law or agreed to in writing, software
++*   distributed under the License is distributed on an "AS IS" BASIS,
++*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++*   See the License for the specific language governing permissions and
++*   limitations under the License.
++*/
++
++package java.beans;
++
++import java.lang.String;
++import java.util.EventObject;
++
++/**
++* A generic LogX Event. Stores the source object that triggered the
++* event and the name of the event (eventTag). The toString method is
++* what is actually printed out to the android.util.Log stream.
++*/
++public class LogXEvent extends EventObject
++{
++	private String eventTag;
++	
++	public LogXEvent(String eventTag, Object source)
++	{
++		super(source);
++		this.eventTag = eventTag;
++	}
++
++	@Override public String toString()
++	{
++		return "[" + eventTag + ", " +
++				source.toString() +", "+
++				"####" + "]"; //#### is a place holder to enter pid and package info. 	 
++	}
++
++}
+diff -rupN /home/ruben/aosp_original/libcore/luni/src/main/java/java/beans//LogXEventListener.java /home/ruben/aosp/libcore/luni/src/main/java/java/beans//LogXEventListener.java
+--- /home/ruben/aosp_original/libcore/luni/src/main/java/java/beans//LogXEventListener.java	1969-12-31 18:00:00.000000000 -0600
++++ /home/ruben/aosp/libcore/luni/src/main/java/java/beans//LogXEventListener.java	2011-07-23 18:59:21.381365000 -0500
+@@ -0,0 +1,29 @@
++/*  Copyright 2011 LogX Project.
++*
++*   Licensed under the Apache License, Version 2.0 (the "License");
++*   you may not use this file except in compliance with the License.
++*   You may obtain a copy of the License at
++*
++*       http://www.apache.org/licenses/LICENSE-2.0
++*
++*   Unless required by applicable law or agreed to in writing, software
++*   distributed under the License is distributed on an "AS IS" BASIS,
++*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++*   See the License for the specific language governing permissions and
++*   limitations under the License.
++*/
++
++package java.beans;
++
++import java.util.EventListener;
++
++/**
++* Interface for LogX Event Listeners. Each listener must
++* implement the following event handlers.
++*/
++public interface LogXEventListener extends EventListener
++{
++	public void onActivity(LogXEvent e);
++	public void onSocketActivity(SocketEvent e);
++	public void onFileActivity(FileEvent e);
++}
+diff -rupN /home/ruben/aosp_original/libcore/luni/src/main/java/java/beans//LogXEventSupport.java /home/ruben/aosp/libcore/luni/src/main/java/java/beans//LogXEventSupport.java
+--- /home/ruben/aosp_original/libcore/luni/src/main/java/java/beans//LogXEventSupport.java	1969-12-31 18:00:00.000000000 -0600
++++ /home/ruben/aosp/libcore/luni/src/main/java/java/beans//LogXEventSupport.java	2011-07-23 18:59:18.321365000 -0500
+@@ -0,0 +1,87 @@
++/*  Copyright 2011 LogX Project.
++*
++*   Licensed under the Apache License, Version 2.0 (the "License");
++*   you may not use this file except in compliance with the License.
++*   You may obtain a copy of the License at
++*
++*       http://www.apache.org/licenses/LICENSE-2.0
++*
++*   Unless required by applicable law or agreed to in writing, software
++*   distributed under the License is distributed on an "AS IS" BASIS,
++*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++*   See the License for the specific language governing permissions and
++*   limitations under the License.
++*/
++
++package java.beans;
++
++import java.util.ArrayList;
++
++/**
++* LogXEventSupport keeps track of the registered event listeners. This
++* singleton is instantiated in com.android.internal.os.ZygoteInit to 
++* preserve state across all dalvik VM instances.   
++*/
++
++public class LogXEventSupport
++{
++	private static LogXEventSupport mInstance = null; //singleton instance
++	private ArrayList<LogXEventListener> listeners; 
++	
++	private LogXEventSupport()
++	{
++		listeners = new ArrayList<LogXEventListener>();
++	}
++	
++	/**
++	* Retrieves the current singleton instance.
++	* @return LogXEventSupport instance.
++	*/
++	public static LogXEventSupport getInstance()
++	{
++		if(mInstance == null)
++			mInstance = new LogXEventSupport();
++			
++		return mInstance;
++	}	
++	
++	/**
++	* Adds a class which implements LogXEventListener to the current
++	* list of listeners.
++	*/
++	public void addListener(LogXEventListener listener)
++	{
++		listeners.add(listener);
++	}
++	
++	/**
++	* Dispatches a generic LogXEvent to all the listeners. Calls
++	* the onActivity method for each registered listener.
++	*/
++	public void dispatchEvent(LogXEvent event)
++	{
++		for (LogXEventListener l : listeners)
++			l.onActivity(event);
++	}
++	
++	/**
++	* Dispatches a SocketEvent to all the listeners. Calls 
++	* the onSocketEvent method for each registered listener.
++	*/
++	public void dispatchEvent(SocketEvent event)
++	{
++		for(LogXEventListener l : listeners)
++			l.onSocketActivity(event);
++	}
++	
++	/**
++	* Dispatches a FileEvent to all the listeners. Calls
++	* the onFileActivity method for each registered listeners.
++	*/
++	public void dispatchEvent(FileEvent event)
++	{
++		for(LogXEventListener l : listeners)
++			l.onFileActivity(event);
++	}
++
++}
+diff -rupN /home/ruben/aosp_original/libcore/luni/src/main/java/java/beans//SocketEvent.java /home/ruben/aosp/libcore/luni/src/main/java/java/beans//SocketEvent.java
+--- /home/ruben/aosp_original/libcore/luni/src/main/java/java/beans//SocketEvent.java	1969-12-31 18:00:00.000000000 -0600
++++ /home/ruben/aosp/libcore/luni/src/main/java/java/beans//SocketEvent.java	2011-07-23 18:59:29.771365000 -0500
+@@ -0,0 +1,31 @@
++/*  Copyright 2011 LogX Project.
++*
++*   Licensed under the Apache License, Version 2.0 (the "License");
++*   you may not use this file except in compliance with the License.
++*   You may obtain a copy of the License at
++*
++*       http://www.apache.org/licenses/LICENSE-2.0
++*
++*   Unless required by applicable law or agreed to in writing, software
++*   distributed under the License is distributed on an "AS IS" BASIS,
++*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++*   See the License for the specific language governing permissions and
++*   limitations under the License.
++*/
++
++package java.beans;
++
++import java.net.Socket;
++
++/**
++* An event class for activity that occurs on
++* java.net.Socket.
++*/
++
++public class SocketEvent extends LogXEvent
++{	
++	public SocketEvent(String eventTag, Socket source)
++	{
++		super(eventTag, source);
++	}
++}
