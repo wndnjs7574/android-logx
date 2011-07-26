@@ -2,9 +2,9 @@
 
 
 == Introduction ==
-To start, you will need a local copy of the AOSP. You can get that here http://source.android.com/.
+It is assumed that you are familiar with the AOSP (http://source.android.com/). You must have a local copy of the AOSP and be able to run it in the Android emulator. 
 
-The changes to the files in the AOSP are distributed as patches. If you
+This project modifies certain parts of the AOSP. These changes are distributed as patches. If you
 are in the root of your local copy of the AOSP, patch -p2 < [location of patch file] should apply the patch correctly. The additional files that were added to the frameworks/ and libcore/ directories are also included as java source files. Their directory trees represent where the files should be located in the AOSP directory.
 
 == Build ==
