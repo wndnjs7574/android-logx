@@ -12,8 +12,7 @@ You will need to build the entire AOSP. You can find instructions for that here:
 
 If you have already built the project, you can just rebuild the relevant changes and include them in the system image. This can be done with the following commands from the root of your local copy of the AOSP (make sure you have executed build/envsetup.sh):
 
-* mmm frameworks/base snod
-
-* mmm libcore/ snod
+  * {{{mmm frameworks/base snod}}}
+  * {{{mmm libcore/ snod}}}
 
 The changes should now be included in your system.img.
