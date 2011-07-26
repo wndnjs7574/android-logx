@@ -19,4 +19,4 @@ If you have already built the AOSP, you can just rebuild the relevant portions a
 The changes should now be included in your system.img.
 
 == View the Log ==
-android-logx prints to the standard android.util.log stream. To view the log, you can run {{{adb logcat -v time LogX:* *:S}}}, with adb in your path. In android.util.LogX.java, you can change what gets logged. Initially, it's both java.io.File and java.net.Socket. Any changes to LogX.java requires a rebuild of frameworks/base.
+Android-logx prints to the standard android.util.log stream. To view the log, you can run {{{adb logcat -v time LogX:* *:S}}}, with adb in your path. In android.util.LogX.java, you can change what gets logged. Initially, it's both java.io.File and java.net.Socket. Any changes to LogX.java requires a rebuild of frameworks/base.
