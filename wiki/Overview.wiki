@@ -1,0 +1,20 @@
+#summary An overview of how to patch your local copy of the AOSP with android-logx.
+
+
+== Introduction ==
+To start, you will need a local copy of the AOSP. You can get that here http://source.android.com/.
+
+The changes to the files in the AOSP are distributed as patches. If you
+are in the root of your local copy of the AOSP, patch -p2 < [location of patch file] should apply the patch correctly. The additional files that were added to the frameworks/ and libcore/ directories are also included as java source files. Their directory trees represent where the files should be located in the AOSP directory.
+
+== Build ==
+You will need to build the entire AOSP. You can find instructions for that here: http://source.android.com/source/building.html. 
+
+If you have already built the project, you can just rebuild the relevant changes and include them in the system image. This can be done with the following commands from the root of your local copy of the AOSP (make sure you have executed build/envsetup.sh):
+
+* mmm frameworks/base snod
+* mmm libcore/ snod
+
+The changes should now be included in your 
+
+
