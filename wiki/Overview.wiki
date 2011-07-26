@@ -4,8 +4,8 @@
 == Introduction ==
 It is assumed that you are familiar with the AOSP (http://source.android.com/). You must have a local copy of the AOSP and be able to run it in the Android emulator. 
 
-This project modifies certain parts of the AOSP. These changes are distributed as patches. If you
-are in the root of your local copy of the AOSP, patch -p2 < [location of patch file] should apply the patch correctly. The additional files that were added to the frameworks/ and libcore/ directories are also included as java source files. Their directory trees represent where the files should be located in the AOSP directory.
+This project modifies certain parts of the AOSP. These changes are distributed as patches. Your linux distribution should come with patch installed. If you
+are in the root of your local copy of the AOSP, patch -p2 < path_to_patch_file should apply the patch correctly. The additional files that were added to the frameworks/ and libcore/ directories are also included as java source files. Their directory trees represent where the files should be located in the AOSP directory.
 
 == Build ==
 You will need to build the entire AOSP. You can find instructions for that here: http://source.android.com/source/building.html. 
