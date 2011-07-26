@@ -6,12 +6,12 @@ It is assumed that you are familiar with the AOSP (http://source.android.com/). 
 
 == Installation ==
 This project modifies certain parts of the AOSP. These changes are distributed as patches. Your linux distribution should come with patch installed, you will need it to apply the patches. If you
-are in the root of your local copy of the AOSP, _patch -p2 < path_to_patch_file_ should apply the patch correctly. The additional files that were added to the frameworks/ and libcore/ directories are also included as java source files. Their directory trees represent where the files should be located in the AOSP directory.
+are in the root of your local copy of the AOSP, _patch -p2 < path_to_patch_file_ should apply the patch correctly. Any files that were added to the frameworks/ and libcore/ directories are also included as java source files. Their directory trees represent where the files should be located in the AOSP directory.
 
 == Build ==
 You will need to build the entire AOSP. You can find instructions for that here: http://source.android.com/source/building.html. 
 
-If you have already built the AOSP, you can just rebuild the relevant changes and include them in the system image. This can be done with the following commands from the root of your local copy of the AOSP (make sure you have executed build/envsetup.sh):
+If you have already built the AOSP, you can just rebuild the relevant portions and include them in the system image. This can be done with the following commands from the root of your local copy of the AOSP (make sure you have executed build/envsetup.sh):
 
   * {{{mmm frameworks/base snod}}}
   * {{{mmm libcore/ snod}}}
