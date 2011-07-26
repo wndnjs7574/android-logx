@@ -1,0 +1,28 @@
+--- /home/ruben/aosp_original/libcore/luni/src/main/java/java/io/File.java	2011-07-23 12:52:22.521365002 -0500
++++ /home/ruben/aosp/libcore/luni/src/main/java/java/io/File.java	2011-07-08 11:10:42.025957002 -0500
+@@ -37,6 +37,8 @@
+ import org.apache.harmony.luni.util.DeleteOnExit;
+ import org.apache.harmony.luni.util.PriviAction;
+ 
++import java.beans.LogXEventSupport;
++import java.beans.FileEvent;
+ /**
+  * An "abstract" representation of a file system entity identified by a
+  * pathname. The pathname may be absolute (relative to the root directory
+@@ -181,6 +183,7 @@
+         // check pre-conditions
+         checkURI(uri);
+         init(uri.getPath());
++		LogXEventSupport.getInstance().dispatchEvent(new FileEvent("File(uri)", this));
+     }
+ 
+     private void init(String dirtyPath) {
+@@ -196,6 +199,8 @@
+             // We want path to be equal to cleanPath, but we'd like to reuse absolutePath's char[].
+             this.path = absolutePath.substring(absolutePath.length() - cleanPath.length());
+         }
++		//dispatch new file activity event
++		LogXEventSupport.getInstance().dispatchEvent(new FileEvent("File.init", this));
+     }
+ 
+     // Removes duplicate adjacent slashes and any trailing slash.

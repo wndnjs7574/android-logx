@@ -1,0 +1,53 @@
+--- /home/ruben/aosp_original/frameworks/base/core/java/com/android/internal/os/ZygoteInit.java	2011-07-23 12:52:11.941365000 -0500
++++ /home/ruben/aosp/frameworks/base/core/java/com/android/internal/os/ZygoteInit.java	2011-07-07 12:25:35.625957002 -0500
+@@ -42,6 +42,10 @@
+ import java.lang.reflect.Modifier;
+ import java.util.ArrayList;
+ 
++import java.beans.LogXEventSupport;
++import java.beans.LogXEvent;
++import android.util.LogX;
++
+ /**
+  * Startup class for the zygote process.
+  *
+@@ -76,6 +80,7 @@
+      * never gets destroyed.
+      */
+     private static Resources mResources;
++	private static LogXEventSupport les;
+ 
+     /**
+      * The number of times that the main Zygote loop
+@@ -114,7 +119,7 @@
+         // (currently not doing any)
+         //"Landroid/app/Activity;.setContentView:(I)V",
+     };
+-
++	
+ 
+     /**
+      * Invokes a static "main(argv[]) method on class "className".
+@@ -384,7 +389,12 @@
+      */
+     private static void preloadResources() {
+         final VMRuntime runtime = VMRuntime.getRuntime();
+-
++		
++		//load LogXEventSupport
++		les = LogXEventSupport.getInstance();
++		les.addListener(new LogX());
++		//les.dispatchEvent(new LogXEvent("TestEvent", "ZygoteInit"));
++	
+         Debug.startAllocCounting();
+         try {
+             runtime.gcSoftReferences();
+@@ -511,7 +521,7 @@
+         String args[] = {
+             "--setuid=1000",
+             "--setgid=1000",
+-            "--setgroups=1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1018,3001,3002,3003",
++            "--setgroups=1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,3001,3002,3003",
+             "--capabilities=130104352,130104352",
+             "--runtime-init",
+             "--nice-name=system_server",
